@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>荒野點擊 RPG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="bossDarkenMask"></div>
+  <div id="bossSpotlight"></div>
+
+
+  <!-- 玩家 HUD -->
+  <div class="hud pixel">
+    <div class="hud-row">HP：<span id="playerHpText"></span></div>
+    <div class="hud-row">ATK：<span id="playerAtkText"></span></div>
+    <div class="hud-row">DEF：<span id="playerDefText"></span></div>
+    <div class="hud-row">金幣：<span id="playerGoldText"></span></div>
+    <div class="hud-row stage" id="stageLabel">第 1 關</div>
+  </div>
+
+  <!-- 固定右上角按鈕區（Auto 在上、Boss 在下） -->
+  <div class="shop-buttons pixel">
+    <button id="autoTestBtn" class="pixel-btn mini-test">Auto</button>
+    <button id="bossButton" class="pixel-btn boss-mini" style="display:none;">Boss</button>
+  </div>
+
+
+  <!-- 右側商店 -->
+  <div class="shop pixel">
+    <h1 class="pixel">商店</h1>
+
+    <!-- 攻擊力升級 -->
+    <div class="shop-item pixel">
+      <h3 class="pixel">攻擊力升級</h3>
+      <div class="shop-info pixel">
+        <div>目前：<span id="shopAtkText"></span></div>
+        <div>升級後：<span id="shopNextAtkText"></span></div>
+        <div>價格：<span id="shopCostText"></span></div>
+      </div>
+      <button id="buyAttackButton" class="pixel-btn">購買</button>
+    </div>
+
+    <!-- 防禦力升級 -->
+    <div class="shop-item pixel">
+      <h3 class="pixel">防禦力升級</h3>
+      <div class="shop-info pixel">
+        <div>目前：<span id="defNow"></span></div>
+        <div>升級後：<span id="defNext"></span></div>
+        <div>價格：<span id="defCost"></span></div>
+      </div>
+      <button id="buyDefButton" class="pixel-btn">購買</button>
+    </div>
+
+    <!-- 最大生命升級 -->
+    <div class="shop-item pixel">
+      <h3 class="pixel">最大生命升級</h3>
+      <div class="shop-info pixel">
+        <div>目前：<span id="hpNow"></span></div>
+        <div>升級後：<span id="hpNext"></span></div>
+        <div>價格：<span id="hpCost"></span></div>
+      </div>
+      <button id="buyHpButton" class="pixel-btn">購買</button>
+    </div>
+
+    <!-- 加血藥水 -->
+    <div class="shop-item pixel">
+      <h3 class="pixel">加血藥水</h3>
+      <div class="shop-info pixel">
+        <div>目前：<span id="addhpNow"></span></div>
+        <div>效果：<span id="addhpNext"></span></div>
+        <div>價格：<span id="addhpCost"></span></div>
+      </div>
+      <button id="buyHealButton" class="pixel-btn">購買</button>
+    </div>
+
+    <div id="healText" class="heal-floating pixel"></div>
+  </div>
+
+
+
+  <!-- 怪物區域 -->
+  <div class="wild-area" id="wildArea">
+
+    <!-- 爆裂粒子 -->
+    <div id="explosionContainer"></div>
+
+    <!-- 傷害浮動文字 -->
+    <div id="playerDamageText" class="damage-floating pixel"></div>
+
+    <!-- 怪物資訊（HP/ATK） -->
+    <div id="monsterStatText" class="monster-stat pixel"></div>
+
+    <!-- 怪物圖片 -->
+    <img id="monsterImg" class="monster-img" src="" alt="monster">
+
+    <!-- 怪物 HP 條 -->
+    <div class="monster-hp-bar">
+      <div id="monsterHpFill" class="monster-hp"></div>
+    </div>
+
+    <!-- 怪物攻擊倒數條 -->
+    <div class="monster-timer-bar">
+      <div id="monsterTimerFill" class="monster-timer"></div>
+    </div>
+
+    <!-- 關卡進度條 -->
+    <div id="stageProgressBar" class="stage-progress-bar">
+      <div id="stageProgressFill" class="stage-progress"></div>
+    </div>
+
+  </div>
+
+
+  <!-- 玩家死亡文字 -->
+  <div id="deathText" class="death-text pixel"></div>
+
+
+
+  <!-- 結果畫面 -->
+  <div id="resultOverlay" class="overlay" style="display:none;">
+    <div class="overlay-content">
+      <h2 id="resultTitle"></h2>
+      <p id="resultMessage"></p>
+      <button id="restartButton" class="pixel-btn">重新開始</button>
+    </div>
+  </div>
+
+
+  <!-- 遊戲開始介紹畫面 -->
+  <div id="introOverlay" class="intro-overlay">
+    <div class="intro-panel pixel">
+
+      <h2 class="intro-title">荒野點擊 RPG</h2>
+      <h3 class="intro-subtitle">— 冒險者的試煉 —</h3>
+
+      <p class="intro-text">
+        你正身處一片危險的荒野，怪物蠢蠢欲動，步步逼近——<br>
+        而你的力量，會隨著每一次戰鬥逐步成長。<br><br>
+
+        點擊荒野攻擊敵人、擊敗怪物取得金幣，並利用金幣於商店強化自身。<br>
+        當你的力量足以承擔使命時，你將挑戰本區最強大的存在：遠古龍王。<br><br>
+
+        <span class="intro-section-title">【戰鬥說明】</span><br>
+        ● 紅色生命條：怪物 HP。<br>
+        ● 黃色攻擊條：怪物攻擊倒數，倒數完後怪物會攻擊你。<br>
+        ● 綠色進度條：關卡進度。擊敗所有普通怪物後，可前往第 10 關 Boss 戰。<br>
+        ● 你也可選擇暫不挑戰 Boss，留在荒野刷怪變強。<br><br>
+
+        <span class="intro-section-title">【玩家資訊】</span><br>
+        左上角 HUD 顯示你的 HP、攻擊、防禦、金幣。<br>
+        商店可提升攻擊力、防禦力、最大生命，或使用加血藥水恢復生命。<br><br>
+
+        <span class="intro-section-title">【提示】</span><br>
+        ● 建議按下 F11 以全螢幕遊玩，體驗更佳。<br>
+        ● 若只想測試遊戲，可使用「自動打怪（Auto）」按鈕。<br><br>
+
+        一切都準備好了。<br>
+        現在——踏入荒野，展開你的冒險吧。
+      </p>
+
+      <button id="startGameBtn" class="pixel-btn start-btn">開始冒險</button>
+    </div>
+  </div>
+
+
+  <div id="askBossOverlay" class="boss-overlay" style="display:none;">
+      <div class="boss-panel pixel">
+        <h2 class="boss-title">前往 Boss 嗎？</h2>
+
+        <p class="boss-text">
+          你已通過所有普通關卡。<br>
+          接下來將面對最終試煉——<br><br>
+          <strong>遠古龍王</strong> 等待你的挑戰！<br>
+          是否前往第 10 關？
+        </p>
+
+        <div class="boss-btn-row">
+          <button id="askBossEnter" class="pixel-btn boss-enter">前往 Boss</button>
+          <button id="askBossCancel" class="pixel-btn boss-cancel">暫時拒絕</button>
+        </div>
+      </div>
+  </div>
+
+
+  <!-- Boss 提示面板 -->
+  <div id="bossOverlay" class="boss-overlay" style="display:none;">
+    <div class="boss-panel pixel">
+      <h2 class="boss-title">第 10 關 —— 遠古龍王</h2>
+      <p class="boss-text">
+        你已征服荒野中的所有敵人。<br>
+        眼前的道路通往最終試煉——<br><br>
+        <strong>遠古龍王</strong> 正等待與真正的勇者交鋒。<br>
+        你是否要踏入這場宿命之戰？
+      </p>
+
+      <div class="boss-btn-row">
+        <button id="bossEnterBtn" class="pixel-btn boss-enter">開始挑戰</button>
+        <button id="bossCancelBtn" class="pixel-btn boss-cancel">暫時拒絕</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deathMask" class="death-mask"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>
