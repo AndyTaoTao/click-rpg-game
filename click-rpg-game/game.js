@@ -588,25 +588,6 @@ function loadLoopMonster() {
   spawnMonster(enhanced);
 }
 
-
-
-
-
-
-
-function showFloatingText(text, color = "#ffffff") {
-  const float = document.createElement("div");
-  float.className = "damage-floating pixel";
-  float.style.color = color;
-  float.textContent = text;
-
-  document.getElementById("wildArea").appendChild(float);
-
-  float.classList.add("damage-anim");
-
-  setTimeout(() => float.remove(), 1000);
-}
-
 /*******************************************
  * 系統綁定
  *******************************************/
@@ -667,6 +648,7 @@ startBtn.addEventListener("click", () => {
   refreshShopUI();
   loadNormalMonster(0);
 });
+
 
 
 
