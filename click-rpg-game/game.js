@@ -122,6 +122,9 @@ function updatePlayerUI() {
 /*******************************************
  * 怪物生成
  *******************************************/
+/*******************************************
+ * 怪物生成 (包含圖片預載入修正)
+ *******************************************/
 function spawnMonster(mon) {
   stopMonsterAttackLoop();
 
@@ -133,6 +136,14 @@ function spawnMonster(mon) {
   monsterImg.dataset.normal = imgPath.normal;
   monsterImg.dataset.attacked = imgPath.attacked;
   monsterImg.dataset.attack = imgPath.attack;
+
+  // ============================================
+  // ★ 關鍵修正：圖片預載入
+  // 透過建立新的 Image 物件，強制瀏覽器提前下載攻擊和被擊圖片
+  // ============================================
+  new Image().src = imgPath.attacked; 
+  new Image().src = imgPath.attack;
+  // ============================================
 
   monsterHpFill.style.width = "100%";
 
@@ -146,7 +157,6 @@ function spawnMonster(mon) {
   startMonsterAttackLoop();
 
   monsterImg.style.transform = "translate(-50%, -50%)";
-
 }
 
 /*******************************************
@@ -648,6 +658,7 @@ startBtn.addEventListener("click", () => {
   refreshShopUI();
   loadNormalMonster(0);
 });
+
 
 
 
