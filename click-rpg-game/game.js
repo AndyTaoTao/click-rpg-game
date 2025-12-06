@@ -103,12 +103,11 @@ const monsterStatText = document.getElementById("monsterStatText");
  *******************************************/
 function getMonsterImgPath(id) {
   return {
-    normal: `img/monster${id}/monster${id}.png`,
-    attacked: `img/monster${id}/monster${id}-attacked.png`,
-    attack: `img/monster${id}/monster${id}-attack.png`
+    normal: `img/monster${id}.png`,
+    attacked: `img/monster${id}-attacked.png`,
+    attack: `img/monster${id}-attack.png`
   };
 }
-
 /*******************************************
  * UI 更新
  *******************************************/
@@ -667,5 +666,6 @@ startBtn.addEventListener("click", () => {
   refreshShopUI();
   loadNormalMonster(0);
 });
+
 
 
